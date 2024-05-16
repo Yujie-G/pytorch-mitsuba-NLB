@@ -80,6 +80,7 @@ class LayerDecoderOnly_alsTN_Config(Config):
 	wiwo: torch.tensor (batch_size, N, 4)
 '''
 def to6d(wiwo):
+	# wiwo: [1, N, 4] (wi_x, wi_y, wo_x, wo_y)  -> [1, N, 6] (wi_x, wi_y, wo_x, wo_y, wi_z, wo_z)
     wiz = torch.sqrt(torch.clamp(1 - wiwo[:, :, 0:1]**2 - wiwo[:, :, 1:2]**2, min=0))
     woz = torch.sqrt(torch.clamp(1 - wiwo[:, :, 2:3]**2 - wiwo[:, :, 3:4]**2, min=0))
     return torch.cat([wiwo, wiz, woz], axis=-1)
