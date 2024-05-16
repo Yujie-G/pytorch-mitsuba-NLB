@@ -8,7 +8,7 @@
     	
     Jiahui Fan, 2022/09
 '''
-import coords
+
 
 '''
     This script helps visualize any latent code into outgoing radiance distributions.
@@ -21,10 +21,12 @@ import warnings
 warnings.filterwarnings("ignore", category=torch.serialization.SourceChangeWarning)
 import numpy as np
 import math
+from tqdm import tqdm
+
 import exr
 from utils import *
 import model
-
+import coords
 from merl import Merl
 
 
@@ -150,7 +152,7 @@ def merl_sample(decoder, latent, out_name, resolution=512, wiz=1):
         batch_size = 1024*64  # Set your batch size
         num_batches = new_wiwo.shape[1] // batch_size
         output0_batches, output1_batches, output2_batches = [], [], []
-        for i in range(num_batches + 1):
+        for i in tqdm(range(num_batches + 1)):
             start = i * batch_size
             end = min(start + batch_size, new_wiwo.shape[1])
 

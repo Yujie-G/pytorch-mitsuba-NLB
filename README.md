@@ -1,18 +1,8 @@
-# Overview
-
-These are experimental scripts for SIGRAPPH 2022 paper ``Neural Layered BRDFs``. In this paper, we proposed to use neural networks to compress and evaluate BRDFs, as well as to layer them in a projected latent space. 
-
-> Project Homepage: https://wangningbei.github.io/2022/NLBRDF.html  
-> My Homepage: https://whois-jiahui.fun
-
-Please feel free to try out these codes to COMPRESS or LAYER your own BRDFs of any kinds (as long as they're in expected data formats).
-
-**NOTE**: These scripts are suboptimal and experimental. There may be redundant lines and functionalities. These codes are provided on an ''AS IS'' basis WITHOUT WARRANTY of any kind. One can arbitrarily change or redistribute these scripts with above statements.
-
 # Requirements
 
 pytorch (tested on ver-1.2.0)  
 openexr (tested on ver-1.3.2)
+tqdm
 
 # Contents
 
@@ -96,6 +86,8 @@ array([[ 0.02173355,  0.00358327,  0.06159558, ...,  0.33209467,  0.23438323,  0
        [ 0.9935267 , -0.11252784,  0.9467221 , ...,  0.00004106,  0.00003232,  0.00002456],
        [ 0.983361  , -0.17322123,  0.9923124 , ...,  0.00034331,  0.00027223,  0.0002034 ]], dtype=float32)
 ```
+
+**You could also use exr file to save this 7 channels.**
 
 # BibTex
 
