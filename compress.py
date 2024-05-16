@@ -52,7 +52,7 @@ if __name__ == '__main__':
         exit()
 
     file_path = sys.argv[1]
-    if os.path.splitext(file_path)[1] == 'exr':
+    if file_path.endswith('exr'):
         file_data = torch.tensor(exr.read(file_path, channels=CHANNELS).reshape(1, -1, 7)).float()
     else:
         file_data = torch.tensor(np.load(file_path).reshape(1, -1, 7)).float()
