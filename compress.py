@@ -38,33 +38,20 @@ torch.set_printoptions(sci_mode=False, linewidth=110)
 np.set_printoptions(suppress=True)
 
 CHANNELS = ["0_view_x", "1_view_y", "2_light_x", "3_light_y", "4_R", "5_G", "6_B"]
-if __name__ == '__main__':
 
-    if len(sys.argv) != 2:
-        print(
-            '''
-                Usage: $ python compress.py NPY_PATH
-        
-                Args:
-                    NPY_PATH: the path to BRDF data file 
-            '''
-        )
-        exit()
-
-    file_path = sys.argv[1]
+def compress_mat(file_path):
     if file_path.endswith('exr'):
         file_data = torch.tensor(exr.read(file_path, channels=CHANNELS).reshape(1, -1, 7)).float()
     else:
         file_data = torch.tensor(np.load(file_path).reshape(1, -1, 7)).float()
     print(file_data.shape)
-
     config = DecoderOnlyConfig()
     decoder = getattr(model, config.compress_decoder)(config)
     decoder.load_state_dict(torch.load(config.decoder_path)())
     decoder = decoder.cuda().train()
 
     batch_size = 4096
-    max_steps = max(int(file_data.shape[1] // batch_size) * 10, 2000)  ## empirically, at least 1k steps or 10 epochs
+    max_steps = max(int(file_data.shape[1] // batch_size) * 10, 1000)  ## empirically, at least 1k steps or 10 epochs
     lr = 0.001
     train_lr = lr * 0.003
     lr_decay_freq = max_steps // 5
@@ -123,3 +110,28 @@ if __name__ == '__main__':
 
     line = '{}'.format(cur_file_latent)
     print('\n' + line)
+
+    with open('data/code_table.txt', 'r', encoding='utf-8') as file:
+        original_content = file.read()
+
+    with open('data/code_table.txt', 'w', encoding='utf-8') as file:
+        comment = '# mat name: {}\n'.format(file_path.split('/')[-1].split('.')[0])
+        file.write(comment + '{}'.format(cur_file_latent) + '\n\n' + original_content)
+
+    return cur_file_latent
+
+
+if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        print(
+            '''
+                Usage: $ python compress.py NPY_PATH
+        
+                Args:
+                    NPY_PATH: the path to BRDF data file 
+            '''
+        )
+        exit()
+
+    file_path = sys.argv[1]
+    compress_mat(file_path)
